@@ -17,7 +17,7 @@ const T = new Twit({
 });
 
 
-app.get('/trends', (request,response) => {
+app.get('/', (request,response) => {
  const {id} = request.body
   
  T.get(
