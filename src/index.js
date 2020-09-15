@@ -18,22 +18,34 @@ const T = new Twit({
 
 
 app.get('/', (request,response) => {
- const {id} = request.body
   
- T.get(
+  try {
+    const {id} = request.body
+    console.log(id)
+  let ala = []
+  T.get(
     `https://api.twitter.com/2/tweets?ids=${id}&tweet.fields=created_at&expansions=author_id&user.fields=created_at`,
     (error, data, response) => {
-        const {text} = data.data[0];
-        const {name, id} = data.includes.users[0];
-        const content = {name, text, userId:id};
-        console.log(content)
-    },
-  );
-
-  response.status(200).send('foi')
+      for (let i =0; i < data.data.length; i++){     
+        const {text} = data.data[i];
+         const {name, id} = data.includes.users[i];
+         const content = {name, text, userId:id};
+        ala.push(content)
+      }
+      },
+    );
+    
+    setTimeout(() => {
+      console.log(ala)
+      response.status(200).json(ala)
+    }, 2000)
+  } catch (error) {
+    
+    response.status(200).send('foi não')
+  }
 });
 
 
-app.listen(3333, () => {
+app.listen(3030, () => {
   console.log('Rodando MAOE')
 });
