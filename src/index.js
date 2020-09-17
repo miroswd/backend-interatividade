@@ -1,9 +1,11 @@
 const express = require('express');
 const dotenv = require('dotenv')
+const cors = require('cors')
 
 const Twit = require('twit');
 
 const app = express();
+app.use(cors())
 dotenv.config()
 app.use(express.json())
 
@@ -17,10 +19,47 @@ const T = new Twit({
 });
 
 
-app.get('/', (request,response) => {
+app.get('/1/:id', (request,response) => {
   
   try {
-    const {id} = request.body
+    const {id} = request.params
+    console.log(id)
+  let ala = []
+
+  
+  T.get(
+    `https://api.twitter.com/2/tweets?ids=${id}&tweet.fields=created_at&expansions=author_id&user.fields=created_at`,
+    (error, data, response) => {
+      for (let i =0; i < data.data.length; i++){     
+        const {text} = data.data[i];
+        console.log('usera',data.includes.users[i])
+        const {name, username, id} = data.includes.users[i];
+        
+        T.get(`https://api.twitter.com/1.1/users/show.json?screen_name=${username}`,(error,data,response) => {
+          // data retornando tudo do usuário
+          const avatar_url = data.profile_image_url_https.replace('_normal','')
+          const content = {name, text, userId:id, avatar_url};
+          ala.push(content)
+        })
+      }
+      },
+    );
+
+    
+    
+    setTimeout(() => {
+      response.status(200).json(ala)
+    }, 6000)
+  } catch (error) {
+    
+    response.status(200).send('foi não')
+  }
+});
+
+app.get('/2/:id', (request,response) => {
+  
+  try {
+    const {id} = request.params
     console.log(id)
   let ala = []
 
