@@ -2,6 +2,7 @@
 
 ```
 yarn # instalar dependências necessárias
+yarn dev:server # Roda o backend
 ```
 
 ### Necessário ter uma conta no Twitter
